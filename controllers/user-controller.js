@@ -6,9 +6,9 @@ const userController = {
     // ================================================
     getAllUsers(req, res) {
         User.find({})
-            //populate comments
+            //populate thoughts
             .populate({
-                path: 'comments',
+                path: 'thoughts',
                 select: '-__v'
                 // The minus sign - in front of the field `__v` indicates that we don't want it to be returned.
             })
@@ -27,7 +27,7 @@ const userController = {
     getUserById({ params }, res) {
         User.findOne({ _id: params.id })
             .populate({
-                path: 'comments',
+                path: 'thoughts',
                 select: '-__v'
             })
             .select('-__v')
