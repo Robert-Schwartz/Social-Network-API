@@ -1,7 +1,7 @@
 // Require express router
 const router = require('express').Router();
 
-// Import Schema Models
+// Import API routes
 const userRoutes = require('./user-routes');
 const thoughtRoutes = require('./thought-routes');
 
