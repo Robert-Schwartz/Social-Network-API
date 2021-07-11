@@ -25,7 +25,7 @@ const ReactionSchema = new Schema(
         createdAt: {
             type: Date,
             default: Date.now,
-            get: createdAtVal => dateFormat(createdAtVal)
+            get: Date.now
         }
     },
     {
@@ -51,13 +51,12 @@ const ThoughtSchema = new Schema({
         type: Date,
         default: Date.now,
         //Use a getter method to format the timestamp on query
-        get: createdAtVal => dateFormat(createdAtVal)
+        get: Date.now
     },
 
     username: {
         type: String,
         required: [true, 'Username is required'],
-        unique: true,
         trim: true
     },
 
