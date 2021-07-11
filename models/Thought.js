@@ -1,9 +1,9 @@
 // Import Dependencies
-// ============================
+// =================================
 const { Schema, model } = require('mongoose');
 
 // Reaction Schema
-// ============================
+// =================================
 const ReactionSchema = new Schema(
     {
         // set custom id to avoid confusion with parent comment's _id field
@@ -28,18 +28,16 @@ const ReactionSchema = new Schema(
             get: createdAtVal => dateFormat(createdAtVal)
         }
     },
-    //add toJSON to add getters
     {
+        //add toJSON to add getters
         toJSON: {
             getters: true
         }
     }
 );
 
-
-
 // Thought Schema Model
-// ============================
+// =================================
 const ThoughtSchema = new Schema({
     thoughtText: {
         type: String,
@@ -67,7 +65,7 @@ const ThoughtSchema = new Schema({
     reactions: [reactionSchema]
 },
     {
-        // use toJSON to tell schema to use Virtuals
+        // use toJSON to tell schema to use Virtuals and getters
         toJSON: {
             virtuals: true,
             getters: true
@@ -78,7 +76,7 @@ const ThoughtSchema = new Schema({
 );
 
 // Virtual Property
-// ==================================
+// =======================================
 // retrieves the length of the thought's reactions array field on query.
 ThoughtSchema.virtual('reactionCount').get(function () {
     return this.reactions.length;
