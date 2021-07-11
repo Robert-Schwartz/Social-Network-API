@@ -1,5 +1,5 @@
 //require User.js from models
-const { User } = require('../models');
+const { User, Thought } = require('../models');
 
 const userController = {
     // Get all users
@@ -8,7 +8,7 @@ const userController = {
         User.find({})
             //populate thoughts
             .populate({
-                path: 'thoughts',
+                path: 'thought',
                 select: '-__v'
                 // The minus sign - in front of the field `__v` indicates that we don't want it to be returned.
             })
