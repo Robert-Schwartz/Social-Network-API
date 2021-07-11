@@ -28,7 +28,7 @@ app.use(require('./routes'));
 
 // Log Mongo queries being executed
 // =================================
-mongoose.set('debug, true');
+mongoose.set('debug', true);
 
 // Listen for port
 // =================================
