@@ -40,7 +40,7 @@ router
 router
     // /api/thoughts/:thoughtId/reactions
     .route('/:id/friends/:friendId')
-    .post(createReaction)
-    .delete(deleteReaction);
+    // .post(createReaction)
+    // .delete(deleteReaction);
 
 module.exports = router;

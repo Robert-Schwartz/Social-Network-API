@@ -39,7 +39,7 @@ router
 router
     // /api/users/:userId/friends/:friendId
     .route('/:id/friends/:friendId')
-    .post(createFriend)
-    .delete(deleteFriend);
+    // .post(createFriend)
+    // .delete(deleteFriend);
 
 module.exports = router;

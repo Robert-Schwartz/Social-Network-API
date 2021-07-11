@@ -62,7 +62,7 @@ const ThoughtSchema = new Schema({
     },
 
     // Array of nested documents created with the reactionSchema
-    reactions: [reactionSchema]
+    reactions: [ReactionSchema]
 },
     {
         // use toJSON to tell schema to use Virtuals and getters
