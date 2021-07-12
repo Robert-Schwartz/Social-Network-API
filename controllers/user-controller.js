@@ -84,9 +84,9 @@ const userController = {
 
     // ****************Friends - Sub Document *************************************
 
-    // Add a Friend
+    // Create a Friend
     // ===========================================================
-    addFriend({ params }, res) {
+    createFriend({ params }, res) {
         User.findOneAndUpdate(
             { _id: params.userId },
             { $addToSet: { friends: params.friendId } },
@@ -115,8 +115,37 @@ const userController = {
                     })
             })
     },
-
-
+    // Delete a Friend
+    // ===========================================================
+    deleteFriend({ params }, res) {
+        User.findOneAndUpdate(
+            { _id: params.userId },
+            { $pull: { friends: params.friendId } },
+            { new: true }
+        )
+            .then(friendData => {
+                if (!friendData) {
+                    res.status(404).json({ message: 'No friend with this id!' });
+                    return;
+                }
+                // Delete friend from the other User:
+                User.findOneAndUpdate(
+                    { _id: params.friendId },
+                    { $pull: { friends: params.userId } },
+                    { new: true }
+                )
+                    .then(friendData => {
+                        if (!friendData) {
+                            res.status(404).json({ message: 'No friend with this id!' });
+                        }
+                        res.json(friendData);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.status(500).json(err);
+                    })
+            })
+    }
 }
 
 //export module
