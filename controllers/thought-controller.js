@@ -46,15 +46,14 @@ const thoughtController = {
 
     // ADD thought to user
     // ================================================
-    createThought({ params, body }, res) {
+    createThought({ body }, res) {
         console.log(body);
         Thought.create(body)
             .then(({ _id }) => {
-                return User.findOneAndUpdate(
-                    { _id: params.userId },
+                return User.findOneAndUpdate({},
                     // $push to add thought's _id to specific user
                     { $push: { thoughts: _id } },
-                    { new: true, runValidators: true }
+                    { new: true }
                 );
             })
             .then(dbUserData => {
@@ -66,24 +65,6 @@ const thoughtController = {
             })
             .catch(err => res.json(err));
     },
-    // ADD Reaction
-    //==============================================
-    addReaction({ params, body }, res) {
-        Thought.findOneAndUpdate(
-            { _id: params.thoughtId },
-            { $push: { reactions: body } },
-            { new: true, runValidators: true }
-        )
-            .then(dbUserData => {
-                if (!dbUserData) {
-                    res.status(404).json({ message: 'No User found with this id!' });
-                    return;
-                }
-                res.json(dbUserData);
-            })
-            .catch(err => res.json(err));
-    },
-
     // Update Thought by id
     /* With this .findOneAndUpdate() method, Mongoose finds a single document we want to update, then updates it and returns the updated document.*/
     // ================================================
@@ -103,36 +84,51 @@ const thoughtController = {
     // DELETE Thought
     // ================================================
     deleteThought({ params }, res) {
-        Thought.findOneAndDelete({ _id: params.thoughtId })
+        Thought.findOneAndDelete({ _id: params.id })
             .then(deletedThought => {
                 if (!deletedThought) {
-                    return res.status(404).json({ message: 'No thought with this id!' });
-                }
-                return User.findOneAndUpdate(
-                    { _id: params.userId },
-                    { $pull: { thoughts: params.thoughtId } },
-                    { new: true }
-                );
-            })
-            .then(dbUserData => {
-                if (!dbUserData) {
-                    res.status(404).json({ message: 'No user found with this id!' });
+                    res.status(404).json({ message: 'No thought with this id!' });
                     return;
                 }
-                res.json(dbUserData);
+                res.json(deletedThought);
+            })
+            .catch(err => res.json(err));
+    },
+    // ADD Reaction
+    //==============================================
+    addReaction({ params, body }, res) {
+        Thought.findOneAndUpdate(
+            { _id: params.thoughtId },
+            { $addToSet: { reactions: body } },
+            { new: true, runValidators: true }
+        )
+            .then(reactionData => {
+                if (!reactionData) {
+                    res.status(404).json({ message: 'No reactions found with this id!' });
+                    return;
+                }
+                res.json(reactionData);
             })
             .catch(err => res.json(err));
     },
     // Delete Reaction
-    deleteReaction({ params }, res) {
+    deleteReaction({ params, body }, res) {
         Thought.findOneAndUpdate(
             { _id: params.thoughtId },
-            { $pull: { replies: { reactionId: params.reactionId } } },
+            { $pull: { reactions: body } },
             { new: true }
         )
-            .then(dbPizzaData => res.json(dbPizzaData))
-            .catch(err => res.json(err));
-    }
+            .then(data => {
+                if (!data) {
+                    return res.status(404).json({ message: 'No reactions with this id!' });
+                }
+                res.json(data);
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).json(err);
+            });
+    },
 };
 
 // export controller
