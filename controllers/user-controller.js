@@ -6,15 +6,9 @@ const userController = {
     // ================================================
     getAllUsers(req, res) {
         User.find({})
-            //populate thoughts
-            .populate({
-                path: 'thought',
-                select: '-__v'
-                // The minus sign - in front of the field `__v` indicates that we don't want it to be returned.
-            })
             .select('-__v')
-            .sort({ _id: -1 })
             // sort in DESC order by the _id value
+            .sort({ _id: -1 })
             .then(dbUserData => res.json(dbUserData))
             .catch(err => {
                 console.log(err);
@@ -26,6 +20,10 @@ const userController = {
     // ================================================
     getUserById({ params }, res) {
         User.findOne({ _id: params.id })
+            .populate({
+                path: 'friends',
+                select: '-__v'
+            })
             .populate({
                 path: 'thoughts',
                 select: '-__v'
@@ -46,7 +44,6 @@ const userController = {
     },
 
     // CreateUser
-    /* With this .createUser() method, we destructure the body out of the Express.js req object because we don't need to interface with any of the other data it provides.*/
     // ================================================
     createUser({ body }, res) {
         User.create(body)
@@ -55,7 +52,8 @@ const userController = {
     },
 
     // Update User by id
-    /* With this .findOneAndUpdate() method, Mongoose finds a single document we want to update, then updates it and returns the updated document.*/
+    /* With this .findOneAndUpdate() method, Mongoose finds a single document we want to update,
+    then updates it and returns the updated document.*/
     // ================================================
     updateUser({ params, body }, res) {
         //include runValidators: true to it will validate any new information
@@ -82,7 +80,43 @@ const userController = {
                 res.json(dbUserData);
             })
             .catch(err => res.status(400).json(err));
-    }
+    },
+
+    // ****************Friends - Sub Document *************************************
+
+    // Add a Friend
+    // ===========================================================
+    addFriend({ params }, res) {
+        User.findOneAndUpdate(
+            { _id: params.userId },
+            { $addToSet: { friends: params.friendId } },
+            { new: true }
+        )
+            .then(friendData => {
+                if (!friendData) {
+                    res.status(404).json({ message: 'No friend with this id!' });
+                    return;
+                }
+                // add friend to the other User: friends come in pairs
+                User.findOneAndUpdate(
+                    { _id: params.friendId },
+                    { $addToSet: { friends: params.userId } },
+                    { new: true }
+                )
+                    .then(friendData => {
+                        if (!friendData) {
+                            res.status(404).json({ message: 'No friend with this id!' });
+                        }
+                        res.json(friendData);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.status(500).json(err);
+                    })
+            })
+    },
+
+
 }
 
 //export module

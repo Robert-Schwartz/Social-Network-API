@@ -66,7 +66,8 @@ const thoughtController = {
             .catch(err => res.json(err));
     },
     // Update Thought by id
-    /* With this .findOneAndUpdate() method, Mongoose finds a single document we want to update, then updates it and returns the updated document.*/
+    /* With this .findOneAndUpdate() method, Mongoose finds a single document we want to update,
+    then updates it and returns the updated document.*/
     // ================================================
     updateThought({ params, body }, res) {
         //include runValidators: true to it will validate any new information
