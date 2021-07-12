@@ -1,6 +1,6 @@
 // Import Dependencies
 // ============================
-const { Schema, model } = require('mongoose');
+const { Schema, Types, model } = require('mongoose');
 
 // User Schema
 // ============================
@@ -15,7 +15,7 @@ const UserSchema = new Schema({
         type: String,
         required: [true, 'Email Address is required'],
         unique: true,
-        match: [/.+@.+\..+/]
+        match: [/.+@.+\..+/, 'Valid Email Address formatting is required']
     },
     //association to the Thoughts model
     // Array of _id values
@@ -38,7 +38,6 @@ const UserSchema = new Schema({
         // use toJSON to tell schema to use Virtuals
         toJSON: {
             virtuals: true,
-            getters: true
         },
         // set id to false because this is a virtual that Mongoose returns, and we don’t need it.
         id: false
