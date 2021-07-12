@@ -8,9 +8,9 @@ const thoughtController = {
     getAllThoughts(req, res) {
         Thought.find({})
             .select('-__v')
-            .sort({ _id: -1 })
             // sort in DESC order by the _id value
-            .then(dbThoughtData => res.json(dbThoughtData))
+            .sort({ _id: -1 })
+            .then(data => res.json(data))
             .catch(err => {
                 console.log(err);
                 res.status(400).json(err);
@@ -21,14 +21,22 @@ const thoughtController = {
     // ================================================
     getThoughtById({ params }, res) {
         Thought.findOne({ _id: params.id })
+            .populate({
+                path: 'thought',
+                select: '-__v'
+            })
+            .populate({
+                path: 'reactions',
+                select: '-__v'
+            })
             .select('-__v')
-            .then(dbUserData => {
+            .then(thoughtData => {
                 // if no thought is found, send 404
-                if (!dbThoughtData) {
+                if (!thoughtData) {
                     res.status(404).json({ message: 'No Thought found with this id!' });
                     return;
                 }
-                res.json(dbThoughtData);
+                res.json(thoughtData);
             })
             .catch(err => {
                 console.log(err);
