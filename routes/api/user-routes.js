@@ -1,4 +1,4 @@
-// Require Express
+// Require Express Router
 const router = require('express').Router();
 
 //Implement Controller Methods
@@ -38,7 +38,7 @@ router
 // ============================================
 router
     // /api/users/:userId/friends/:friendId
-    .route('/:id/friends/:friendId')
+    .route('/:userId/friends/:friendId')
     .post(createFriend)
     .delete(deleteFriend);
 

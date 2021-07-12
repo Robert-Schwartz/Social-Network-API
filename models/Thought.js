@@ -32,7 +32,8 @@ const ReactionSchema = new Schema(
         //add toJSON to add getters
         toJSON: {
             getters: true
-        }
+        },
+        id: false
     }
 );
 

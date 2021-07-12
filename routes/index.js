@@ -1,8 +1,8 @@
 // require express router
 const router = require('express').Router();
 
-// Import all of the API routes from /api/index.js
-const apiRoutes = require('./api/index');
+// Import all of the API routes from /api
+const apiRoutes = require('./api');
 
 // will not be using front end HTML routes yet.  Save for future enhancement
 // const htmlRoutes = require('./html/html-routes');
