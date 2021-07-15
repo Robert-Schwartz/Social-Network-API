@@ -1,6 +1,6 @@
 // Import Dependencies
 // =================================
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 
 // Reaction Schema
 // =================================

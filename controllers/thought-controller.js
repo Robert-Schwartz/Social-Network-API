@@ -50,7 +50,7 @@ const thoughtController = {
         console.log(body);
         Thought.create(body)
             .then(({ _id }) => {
-                return User.findOneAndUpdate({},
+                return User.findOneAndUpdate({_id: body.userId},
                     // $push to add thought's _id to specific user
                     { $push: { thoughts: _id } },
                     { new: true }
